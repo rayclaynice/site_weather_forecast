@@ -208,34 +208,3 @@ def build_wind_block_figs(lat, lon):
 
 
 
-"""
-app = Dash(__name__)
-
-app.layout = html.Div([
-    html.H1("Weather Dashboard",
-            style={'textAlign': 'center', 'marginBottom': '40px'}),
-
-    html.Div([
-        html.Div([
-            dcc.Graph(figure=fig_wind, style={'width': '100%'})
-        ], style={'width': '48%'}),
-
-        html.Div([
-            dcc.Graph(figure=fig_gusts, style={'width': '100%'})
-        ], style={'width': '48%'}),
-    ], style={'display': 'flex', 'justifyContent': 'center', 'gap': '20px'}),
-
-    html.Div([
-        dcc.Graph(figure=fig_pressure, style={'width': '100%'})
-    ], style={'width': '96%', 'margin': '20px auto 0'}),
-
-    html.Div([
-        dcc.Graph(figure=fig_cloud, style={'width': '100%'})
-    ], style={'width': '96%', 'margin': '20px auto 0'}),
-
-    html.Div([
-        dcc.Graph(figure=fig_visibility, style={'width': '100%'})
-    ], style={'width': '96%', 'margin': '20px auto 0'})
-])
-
-"""
