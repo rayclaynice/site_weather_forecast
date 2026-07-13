@@ -1,0 +1,201 @@
+import requests
+from dash import html
+
+
+# ---------- Standalone helpers (no API call needed) ----------
+
+def wind_direction(degrees):
+    directions = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"]
+    return directions[round(degrees / 45) % 8]
+
+
+weather_codes = {
+    0: "Clear Sky", 1: "Mainly Clear", 2: "Partly Cloudy", 3: "Overcast",
+    45: "Fog", 48: "Depositing Rime Fog",
+    51: "Light Drizzle", 53: "Moderate Drizzle", 55: "Dense Drizzle",
+    56: "Light Freezing Drizzle", 57: "Dense Freezing Drizzle",
+    61: "Slight Rain", 63: "Moderate Rain", 65: "Heavy Rain",
+    66: "Light Freezing Rain", 67: "Heavy Freezing Rain",
+    71: "Slight Snow Fall", 73: "Moderate Snow Fall", 75: "Heavy Snow Fall",
+    77: "Snow Grains",
+    80: "Slight Rain Showers", 81: "Moderate Rain Showers", 82: "Violent Rain Showers",
+    85: "Slight Snow Showers", 86: "Heavy Snow Showers",
+    95: "Thunderstorm", 96: "Thunderstorm with Slight Hail", 99: "Thunderstorm with Heavy Hail",
+}
+
+
+def kpi_card(title, value, unit=""):
+    return html.Div(
+        [
+            html.P(title, style={"fontSize": "14px", "color": "#666"}),
+            html.H2(f"{value}{unit}")
+        ],
+        style={
+            "backgroundColor": "#f8f9fa", "padding": "20px", "borderRadius": "10px",
+            "width": "200px", "textAlign": "center", "boxShadow": "0 2px 6px rgba(0,0,0,0.1)"
+        }
+    )
+
+
+# ---------- API call (the only thing that needs lat/lon) ----------
+
+def fetch_current(lat, lon):
+    url = "https://api.open-meteo.com/v1/forecast"
+    params = {
+        "latitude": lat,
+        "longitude": lon,
+        "timezone": "auto",
+        "current": (
+            "temperature_2m,relative_humidity_2m,weather_code,"
+            "wind_speed_10m,wind_direction_10m,surface_pressure,"
+            "rain,showers,precipitation"
+        )
+    }
+    response = requests.get(url, params=params, timeout=500)
+    response.raise_for_status()
+    data = response.json()
+    return data["current"]   # only returns the current-weather dict now
+
+
+
+
+"""
+import requests
+import pandas as pd
+from dash import Dash, html
+
+
+
+
+
+
+
+# Weather Data From API
+def fetch_current(lat, lon):
+
+    url = "https://api.open-meteo.com/v1/forecast"
+
+    params = {
+        "latitude": lat,
+        "longitude": lon,
+        "timezone": "auto",
+        "current": (
+            "temperature_2m,"
+            "relative_humidity_2m,"
+            "weather_code,"
+            "wind_speed_10m,"
+            "wind_direction_10m,"
+            "surface_pressure,"
+            "rain,"
+            "showers,"
+            "precipitation"
+        )
+    }
+
+    response = requests.get(url, params=params, timeout=500)
+    response.raise_for_status()
+
+    data = response.json()
+
+    current = data["current"]
+
+
+
+    #wind direction conversion
+    def wind_direction(degrees):
+        directions = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"]
+        return directions[round(degrees / 45) % 8]
+
+    #weather codes conversion placeholder
+    weather_codes = {
+        0: "Clear Sky",
+        1: "Mainly Clear",
+        2: "Partly Cloudy",
+        3: "Overcast",
+        45: "Fog",
+        48: "Depositing Rime Fog",
+        51: "Light Drizzle",
+        53: "Moderate Drizzle",
+        55: "Dense Drizzle",
+        56: "Light Freezing Drizzle",
+        57: "Dense Freezing Drizzle",
+        61: "Slight Rain",
+        63: "Moderate Rain",
+        65: "Heavy Rain",
+        66: "Light Freezing Rain",
+        67: "Heavy Freezing Rain",
+        71: "Slight Snow Fall",
+        73: "Moderate Snow Fall",
+        75: "Heavy Snow Fall",
+        77: "Snow Grains",
+        80: "Slight Rain Showers",
+        81: "Moderate Rain Showers",
+        82: "Violent Rain Showers",
+        85: "Slight Snow Showers",
+        86: "Heavy Snow Showers",
+        95: "Thunderstorm",
+        96: "Thunderstorm with Slight Hail",
+        99: "Thunderstorm with Heavy Hail",
+    }
+
+
+    #function to apply design to KPI cards
+    def kpi_card(title, value, unit=""):
+        return html.Div(
+            [
+                html.P(title, style={"fontSize": "14px", "color": "#666"}),
+                html.H2(f"{value}{unit}")
+            ],
+            style={
+                "backgroundColor": "#f8f9fa",
+                "padding": "20px",
+                "borderRadius": "10px",
+                "width": "200px",
+                "textAlign": "center",
+                "boxShadow": "0 2px 6px rgba(0,0,0,0.1)"
+            }
+        )
+    return current, kpi_card, wind_direction, weather_codes
+
+
+
+
+
+
+app = Dash(__name__)
+
+
+
+
+app.layout = html.Div(
+
+    [
+        html.H1("Current Weather"),
+
+        html.Div(
+
+            [
+                kpi_card("Temperature", current["temperature_2m"]," °C"),
+                kpi_card("Humidity", current["relative_humidity_2m"], "%"),
+                kpi_card("Wind Speed", current["wind_speed_10m"], " km/h"),
+                kpi_card("Wind Direction", wind_direction(current["wind_direction_10m"])),
+                kpi_card("Weather",weather_codes[current["weather_code"]]),
+                kpi_card("Surface Pressure", current["surface_pressure"]," hPa"),
+                kpi_card("Rain", current["rain"]," mm"),
+                kpi_card("Showers", current["showers"]," mm"),
+                kpi_card("Precipitation",current["precipitation"]," mm"),
+            ],
+            style={
+                "display": "flex",
+                "gap": "20px",
+                "flexWrap": "wrap"
+                }
+            )
+    ],
+
+    style={"padding": "30px"}
+
+)
+if __name__ == "__main__":
+    app.run(debug=True)
+"""
