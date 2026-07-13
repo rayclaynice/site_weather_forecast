@@ -1,9 +1,7 @@
 import requests
-from retry_requests import retry
 import pandas as pd
 import json
 import plotly.express as px
-from dash import Dash, html,dcc
 
 
 
@@ -130,7 +128,6 @@ def build_temperature_figs(lat, lon):
         barmode="group"
     )
 
-    # Make daylight wider/base and sunshine on top with better visibility
     fig2.update_traces(
         marker_line_color="white",
         marker_line_width=0.8,
@@ -153,7 +150,6 @@ def build_temperature_figs(lat, lon):
         
     )
 
-    # Rename traces
     fig2.data[0].name = "Daylight Duration"
     fig2.data[1].name = "Actual Sunshine Duration"
 

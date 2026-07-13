@@ -1,5 +1,4 @@
 import requests
-from retry_requests import retry
 import pandas as pd
 import json
 import plotly.express as px

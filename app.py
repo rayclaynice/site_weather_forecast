@@ -117,12 +117,12 @@ header = html.Div([
         ]),
         html.Div([
             html.Label("Longitude", style={'fontSize': '12px', 'color': '#94a3b8', 'display': 'block', 'marginBottom': '4px'}),
-            dcc.Input(id="lon-input", type="number", value=7.0,
+            dcc.Input(id="lon-input", type="number", value=3.3,
                       style={'padding': '9px 12px', 'borderRadius': '10px', 'border': '1px solid #e2e8f0', 'width': '100px'})
         ]),
         html.Div([
             html.Label("Latitude", style={'fontSize': '12px', 'color': '#94a3b8', 'display': 'block', 'marginBottom': '4px'}),
-            dcc.Input(id="lat-input", type="number", value=4.8,
+            dcc.Input(id="lat-input", type="number", value=6.5,
                       style={'padding': '9px 12px', 'borderRadius': '10px', 'border': '1px solid #e2e8f0', 'width': '100px'})
         ]),
         html.Div([
@@ -196,7 +196,7 @@ app.clientside_callback(
     prevent_initial_call=True
 )
 
-# This Ticks the progress up while waiting (caps at 90% until real data arrives)
+# This Ticks the progress up while waiting till 90%
 @app.callback(
     Output("progress-value", "data"),
     Output("progress-fill", "style"),
